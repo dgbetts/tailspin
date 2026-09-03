@@ -19,7 +19,9 @@ import GameCard from '../components/GameCard.astro';
 import { getDatabase } from '../lib/db';
 import { getAllGames } from '../lib/games';
 
+/** Properties accepted by this reusable game list component. */
 interface Props {
+  /** Text displayed in the page heading. */
   title: string;
 }
 
@@ -43,7 +45,9 @@ const games = await getAllGames(getDatabase());
 
 ```astro
 ---
+/** Properties accepted by the shared page layout. */
 interface Props {
+  /** Text used for the document title. */
   title: string;
 }
 const { title } = Astro.props;
@@ -110,9 +114,26 @@ There is no Svelte/React layer. When a page genuinely needs client behaviour, ad
 
 - Use TypeScript for type-safe props
 - Define `Props` interface in frontmatter
+- For every reusable component, add a JSDoc comment to the `Props` interface and document each property with its purpose, not merely its TypeScript type
 - Type component imports and helper return values
 - Run `npx astro sync` to (re)generate route/content types before linting or type-checking
 - `.astro` files are type-checked by `npm run typecheck:astro` (which runs `astro sync` then `astro check`), on the classic `typescript` package. The pure TypeScript in `db/`, `src/lib/`, and `src/types/` is type-checked separately by `npm run typecheck` (the native TS 7 compiler, `tsgo`), which does **not** process `.astro` files.
+
+### Component contract example
+
+```astro
+---
+/** Properties accepted by the reusable page hero component. */
+interface Props {
+  /** Primary heading shown to the user. */
+  title: string;
+  /** Optional supporting text displayed below the heading. */
+  subtitle?: string;
+}
+---
+```
+
+Keep component documentation current when changing its contract. Use implementation comments only to explain intent or a non-obvious constraint; do not restate the markup or script.
 
 ## Best Practices
 
